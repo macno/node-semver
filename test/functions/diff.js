@@ -32,13 +32,22 @@ test('diff versions test', (t) => {
     ['1.0.0-1', '2.0.0-1', 'premajor'],
     ['1.0.0-1', '1.1.0-1', 'preminor'],
     ['1.0.0-1', '1.0.1-1', 'prepatch'],
+    ['foo', '1.0.1-1', null, 'Invalid Version: null'],
+    ['1.0.1-1', 'foo', null, 'Invalid Version: null'],
   ].forEach((v) => {
     const version1 = v[0]
     const version2 = v[1]
     const wanted = v[2]
-    const found = diff(version1, version2)
+    const error = v[3]
     const cmd = `diff(${version1}, ${version2})`
-    t.equal(found, wanted, `${cmd} === ${wanted}`)
+    if (!error) {
+      const found = diff(version1, version2)
+      t.equal(found, wanted, `${cmd} === ${wanted}`)
+    } else {
+      t.throws(function () {
+        diff(version1, version2)
+      }, new TypeError(v[3]), `${cmd} must throw an ${error} error`)
+    }
   })
 
   t.end()

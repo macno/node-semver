@@ -3,6 +3,9 @@ const parse = require('./parse')
 const diff = (version1, version2) => {
   const v1 = parse(version1)
   const v2 = parse(version2)
+  if (v1 === null || v2 === null) {
+    throw new TypeError(`Invalid Version: null`)
+  }
   const comparison = v1.compare(v2)
 
   if (comparison === 0) {
